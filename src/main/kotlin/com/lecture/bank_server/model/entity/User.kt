@@ -9,7 +9,7 @@ import java.math.BigDecimal
 import java.time.LocalDateTime
 
 @Entity
-@Table(name = "account")
+@Table(name = "users")
 data class User (
 
     @Id
