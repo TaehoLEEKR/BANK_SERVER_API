@@ -12,8 +12,10 @@ private const val key = "github"
 class GithubAuthService(
     private val config : OAuth2Config
 ) : OAuthServiceInterface {
-    override val providerName: String
-        get() = TODO("Not yet implemented")
+
+    private val oAuthInfo = config.providers[key]   ?: throw TODO("EXCEPTION")
+
+    override val providerName: String = key
 
     override fun getAccessToken(code: String): OAuth2TokenResponse {
         TODO("Not yet implemented")
