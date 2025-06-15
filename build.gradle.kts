@@ -3,6 +3,8 @@ plugins {
     kotlin("plugin.spring") version "1.9.25"
     id("org.springframework.boot") version "3.3.12"
     id("io.spring.dependency-management") version "1.1.7"
+
+    kotlin("plugin.serialization") version "1.8.0"
 }
 
 group = "com.lecture"
