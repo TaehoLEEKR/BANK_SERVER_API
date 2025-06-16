@@ -14,4 +14,6 @@ enum class ErrorCode (
     FAILED_TO_CALL_CLIENT(-101,"failed to call client"),
     CALL_REQUEST_BODY_NULL(-102,"call request body is null"),
     NOT_FOUND_PROVIDER(-103,"not found provider"),
+    TOKEN_IS_INVALID(-104,"token is invalid"),
+    TOKEN_IS_EXPIRE(-105,"auth token_is_expire"),
 }
