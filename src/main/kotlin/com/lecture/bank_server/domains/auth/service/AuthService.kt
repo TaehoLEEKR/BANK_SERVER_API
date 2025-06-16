@@ -2,6 +2,7 @@ package com.lecture.bank_server.domains.auth.service
 
 import com.lecture.bank_server.common.exception.CustomException
 import com.lecture.bank_server.common.exception.ErrorCode
+import com.lecture.bank_server.common.jwt.JwtProvider
 import com.lecture.bank_server.common.jwt.jwtProvider
 import com.lecture.bank_server.interfaces.OAuthServiceInterface
 import org.springframework.stereotype.Service
@@ -9,7 +10,7 @@ import org.springframework.stereotype.Service
 @Service
 class AuthService(
     private val oAuth2Services : Map<String,OAuthServiceInterface>
-    private val jwtProvider: jwtProvider
+    private val jwtProvider: JwtProvider
 ) {
     fun handleAuth(state: String, code: String) : String{
         val provider = state.lowercase()
