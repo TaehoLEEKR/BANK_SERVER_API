@@ -21,6 +21,7 @@ class AuthService(
 
         val userInfo = callService.getUserInfo(accessToken.accessToken)
 
+        val token = jwtProvider.createToken(provider, userInfo.email, userInfo.name, userInfo.id)
         //userInfo
 
     }
