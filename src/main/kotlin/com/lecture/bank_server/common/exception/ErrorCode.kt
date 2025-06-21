@@ -16,4 +16,5 @@ enum class ErrorCode (
     NOT_FOUND_PROVIDER(-103,"not found provider"),
     TOKEN_IS_INVALID(-104,"token is invalid"),
     TOKEN_IS_EXPIRE(-105,"auth token_is_expire"),
+    FAILED_TO_INVOKE_INLOGGER(-106,"failed to invoke inlogger"),
 }
