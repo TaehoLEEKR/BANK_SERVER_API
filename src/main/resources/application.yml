@@ -1,0 +1,33 @@
+server:
+  port: 9090
+
+
+jwt:
+  secret-key : "jwt-secret-key"
+  time: 30
+
+oauth2:
+  providers:
+    google:
+      client-id : ""
+      client-secret : ""
+      redirect-uri : ""
+    github:
+      client-id: ""
+      client-secret: ""
+      redirect-uri: ""
+
+datasource:
+  mysql:
+    url: jdbc:mysql://localhost:3306/bank
+    username: root
+    password: "0000"
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+
+spring:
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect

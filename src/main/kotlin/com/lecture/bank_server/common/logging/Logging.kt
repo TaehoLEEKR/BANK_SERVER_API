@@ -18,7 +18,7 @@ object Logging{
 
         log.info(logInfo.toString())
 
-        result ?: throw CustomException(ErrorCode.FAILED_TO_INVOKE_INLOGGER)
+        return result ?: throw CustomException(ErrorCode.FAILED_TO_INVOKE_INLOGGER)
     }
 
     private fun now() : Long {

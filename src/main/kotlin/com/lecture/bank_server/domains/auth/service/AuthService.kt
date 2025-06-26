@@ -9,6 +9,7 @@ import com.lecture.bank_server.common.transaction.Transactional
 import com.lecture.bank_server.domains.auth.repository.AuthUserRepository
 import com.lecture.bank_server.interfaces.OAuthServiceInterface
 import com.lecture.bank_server.model.entity.User
+import org.apache.tomcat.util.http.parser.Authorization
 import org.slf4j.Logger
 import org.springframework.stereotype.Service
 
@@ -56,5 +57,9 @@ class AuthService(
 
         return@logFor token
 
+    }
+
+    fun verifyToken(authorization: String){
+        jwtProvider.verifyToken(authorization.removePrefix("Bearer "))
     }
 }
