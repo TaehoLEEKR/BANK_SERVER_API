@@ -1,11 +1,15 @@
 package com.lecture.bank_server.domains.bank.service
 
+import com.github.f4b6a3.ulid.UlidCreator
+import com.lecture.bank_server.common.exception.CustomException
+import com.lecture.bank_server.common.exception.ErrorCode
 import com.lecture.bank_server.common.logging.Logging
 import com.lecture.bank_server.common.transaction.Transactional
 import com.lecture.bank_server.domains.bank.repository.BankAccountRepository
 import com.lecture.bank_server.domains.bank.repository.BankUserRepository
 import com.lecture.bank_server.model.dto.Response
 import com.lecture.bank_server.model.dto.ResponseProvider
+import com.lecture.bank_server.model.entity.Account
 import org.slf4j.Logger
 import java.lang.Math.random
 
@@ -21,7 +25,23 @@ class BankService(
 ) {
     fun createAccount(userUlid: String) : Response<String> =Logging.logFor(logger){ log ->
         log["userUlid"] = userUlid
-        transaction.run { }
+        transaction.run {
+            val user = bankUserRepository.findAllByUlid(userUlid) ?: throw CustomException(ErrorCode.NOT_FOUND_USER)
+            val ulid = UlidCreator.getUlid().toString()
+            val accountNumber = generateRandomAccountNumber()
+
+            val account = Account(
+                ulid = ulid,
+                user = user,
+                accountNumber = accountNumber,
+            )
+
+            try{
+                bankAccountRepository.save(account)
+            }catch (e: Exception){
+                throw CustomException(ErrorCode.FAILED_TO_SAVE_DATA, e.message ?: "Failed to save data")
+            }
+        }
 
 
         return@logFor ResponseProvider.success("SUCCESS")
