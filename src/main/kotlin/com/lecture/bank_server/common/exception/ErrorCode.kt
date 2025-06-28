@@ -19,4 +19,6 @@ enum class ErrorCode (
     FAILED_TO_INVOKE_INLOGGER(-106,"failed to invoke inlogger"),
     NOT_FOUND_USER(-107,"not found provider"),
     FAILED_TO_SAVE_DATA(-108,"failed to save data"),
+    FAILED_TO_FIND_ACCOUNT(-109,"failed to find account"),
+    MISS_MATCH_ACCOUNT_ULID_AND_USER_ULID(-110,"miss match account ulid and user ulid"),
 }

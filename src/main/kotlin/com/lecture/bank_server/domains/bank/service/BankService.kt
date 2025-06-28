@@ -50,7 +50,11 @@ class BankService(
     fun balance(userUlid: String, accountUlid: String) : Response<String> = Logging.logFor(logger) { log ->
         log["userUlid"] = userUlid
         log["accountUlid"] = accountUlid
-        transaction.run { }
+        return@logFor transaction.run {
+            val account = bankAccountRepository.findAllByUlid(accountUlid) ?: throw CustomException(ErrorCode.FAILED_TO_FIND_ACCOUNT,accountUlid)
+            if(account.user.ulid != userUlid) throw CustomException(ErrorCode.MISS_MATCH_ACCOUNT_ULID_AND_USER_ULID)
+            ResponseProvider.success(account.balance.toString())
+        }
     }
 
     fun removeAccount(userUlid: String, accountUlid: String) : Response<String> = Logging.logFor(logger){ log ->
