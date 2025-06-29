@@ -14,6 +14,8 @@ import org.slf4j.Logger
 import java.lang.Math.random
 
 import org.springframework.stereotype.Service
+import java.math.BigDecimal
+import java.time.LocalDateTime
 
 
 @Service
@@ -47,6 +49,8 @@ class BankService(
         return@logFor ResponseProvider.success("SUCCESS")
     }
 
+    //TODO -> 동시성 이슈
+
     fun balance(userUlid: String, accountUlid: String) : Response<String> = Logging.logFor(logger) { log ->
         log["userUlid"] = userUlid
         log["accountUlid"] = accountUlid
@@ -60,7 +64,26 @@ class BankService(
     fun removeAccount(userUlid: String, accountUlid: String) : Response<String> = Logging.logFor(logger){ log ->
         log["userUlid"] = userUlid
         log["accountUlid"] = accountUlid
-        transaction.run { }
+        return@logFor transaction.run {
+            val user = bankUserRepository.findAllByUlid(userUlid) ?: throw CustomException(ErrorCode.NOT_FOUND_USER)
+            val account = bankAccountRepository.findAllByUlid(accountUlid) ?: throw CustomException(ErrorCode.FAILED_TO_FIND_ACCOUNT,accountUlid)
+
+            if(account.user.ulid != userUlid)
+                throw CustomException(ErrorCode.MISS_MATCH_ACCOUNT_ULID_AND_USER_ULID)
+
+            if(account.balance.compareTo(BigDecimal.ZERO) != 0)
+                throw CustomException(ErrorCode.ACCOUNT_BALANCE_IS_NOT_ZERO))
+
+            val updatedAccount = account.copy(
+                isDeleted = true,
+                deletedAt = LocalDateTime.now(),
+                updatedAt = LocalDateTime.now()
+            )
+
+            bankAccountRepository.save(updatedAccount)
+
+            ResponseProvider.success("SUCCESS")
+        }
         return@logFor ResponseProvider.success("SUCCESS")
     }
 

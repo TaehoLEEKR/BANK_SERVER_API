@@ -21,4 +21,5 @@ enum class ErrorCode (
     FAILED_TO_SAVE_DATA(-108,"failed to save data"),
     FAILED_TO_FIND_ACCOUNT(-109,"failed to find account"),
     MISS_MATCH_ACCOUNT_ULID_AND_USER_ULID(-110,"miss match account ulid and user ulid"),
+    ACCOUNT_BALANCE_IS_NOT_ZERO(-111,"account_balance_is_not_zero"),
 }
