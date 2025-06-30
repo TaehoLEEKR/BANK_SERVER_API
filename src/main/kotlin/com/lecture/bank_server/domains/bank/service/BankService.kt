@@ -72,7 +72,7 @@ class BankService(
                 throw CustomException(ErrorCode.MISS_MATCH_ACCOUNT_ULID_AND_USER_ULID)
 
             if(account.balance.compareTo(BigDecimal.ZERO) != 0)
-                throw CustomException(ErrorCode.ACCOUNT_BALANCE_IS_NOT_ZERO))
+                throw CustomException(ErrorCode.ACCOUNT_BALANCE_IS_NOT_ZERO)
 
             val updatedAccount = account.copy(
                 isDeleted = true,
