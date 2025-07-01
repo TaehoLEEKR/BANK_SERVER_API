@@ -1,5 +1,8 @@
 package com.lecture.bank_server.config
 
+import org.redisson.Redisson
+import org.redisson.api.RedissonClient
+import org.redisson.config.Config
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -46,5 +49,25 @@ class RedisConfig {
         template.afterPropertiesSet()
 
         return template
+    }
+
+    @Bean
+    fun redissonClient(
+        @Value("\${database.redis.host}")   host : String,
+        @Value("\${database.redis.timeout:${10000}}")   timeout : Int,
+        @Value("\${database.redis.password:${null}}")   password : String?,
+    ) : RedissonClient {
+        val config = Config()
+
+        val singleServer = config.useSingleServer()
+            .setAddress(host)
+            .setTimeout(timeout)
+
+        if(!password.isNullOrBlank()){
+            singleServer.setPassword(password)
+        }
+        return Redisson.create(config).also {
+            println("redisson create success")
+        }
     }
 }
