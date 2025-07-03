@@ -22,16 +22,28 @@ class RedisClient(
 
     fun setIfNotExist(key:String, value:String) = template.opsForValue().setIfAbsent(key, value) ?: false
 
-    fun <T> invokeWithMutex(key : String , funtion : () -> T) {
+    fun <T> invokeWithMutex(key : String , function : () -> T) :T? {
+
         val lock = redissonClient.getLock(key)
+        var lockAcquired = false
 
         try{
+             lockAcquired = lock.tryLock(10 ,15, TimeUnit.SECONDS)
+
+            if(!lockAcquired) throw CustomException(ErrorCode.FAILED_TO_GET_LOCK, key)
+
             lock.lock(15 , TimeUnit.SECONDS)
-            funtion.invoke()
+
+            return function.invoke()
+
         }catch (e : Exception){
-            throw CustomException(ErrorCode.FAILED_TO_INVOKE_WITH_MUTEX, key)
+            throw CustomException(ErrorCode.FAILED_TO_INVOKE_WITH_MUTEX, e.message)
         }finally {
-            lock.unlock()
+
+            if(lockAcquired && lock.isHeldByCurrentThread){
+                lock.unlock()
+            }
+
         }
 
     }

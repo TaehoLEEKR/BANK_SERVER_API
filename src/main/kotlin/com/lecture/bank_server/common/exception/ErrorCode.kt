@@ -24,6 +24,7 @@ enum class ErrorCode (
     ACCOUNT_BALANCE_IS_NOT_ZERO(-111,"account_balance_is_not_zero"),
     FAILED_TO_INVOKE_WITH_MUTEX(-112,"failed to invoke with mutex"),
     FAILED_TO_INVOKE_WITHOUT_MUTEX(-113,"failed to invoke without mutex"),
+    FAILED_TO_GET_LOCK(-114,"failed to get lock"),
     ;
 
 }
