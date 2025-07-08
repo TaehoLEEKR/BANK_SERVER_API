@@ -6,8 +6,11 @@ import com.lecture.bank_server.common.exception.CustomException
 import com.lecture.bank_server.common.exception.ErrorCode
 import com.lecture.bank_server.common.logging.Logging
 import com.lecture.bank_server.common.transaction.Transactional
+import com.lecture.bank_server.domains.transactions.domain.DepositResponse
 import com.lecture.bank_server.domains.transactions.repository.TransactionsAccount
 import com.lecture.bank_server.domains.transactions.repository.TransactionsUser
+import com.lecture.bank_server.model.dto.Response
+import com.lecture.bank_server.model.dto.ResponseProvider
 import org.slf4j.Logger
 import org.springframework.stereotype.Service
 import java.math.BigDecimal
@@ -22,7 +25,7 @@ class TransactionService (
     private val logger : Logger = Logging.getLogger(TransactionService::class.java)
 ){
 
-    fun deposit(userUlid: String, accountID : String, value : BigDecimal) = Logging.logFor(logger) { it
+    fun deposit(userUlid: String, accountID : String, value : BigDecimal) : Response<DepositResponse> = Logging.logFor(logger) { it
 
         it["AccountID"] = accountID
         it["Ulid"] = userUlid
@@ -42,6 +45,7 @@ class TransactionService (
                 account.updatedAt = LocalDateTime.now()
                 transactionsAccount.save(account)
 
+                ResponseProvider.success(DepositResponse(afterBalance = account.balance) )
             }
         }
 
