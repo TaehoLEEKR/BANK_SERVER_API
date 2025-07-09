@@ -34,7 +34,7 @@ class TransactionService (
 
         val key = RedisKeyProvider.bankMutexKey(userUlid,accountID)
 
-        redisClient.invokeWithMutex(key){
+        return@logFor redisClient.invokeWithMutex(key){
             return@invokeWithMutex transactional.run {
                 val user = transactionsUser.findByUlid(userUlid)
 
