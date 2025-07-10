@@ -5,6 +5,7 @@ import com.lecture.bank_server.common.cache.RedisKeyProvider
 import com.lecture.bank_server.common.exception.CustomException
 import com.lecture.bank_server.common.exception.ErrorCode
 import com.lecture.bank_server.common.logging.Logging
+import com.lecture.bank_server.common.logging.Logging.logFor
 import com.lecture.bank_server.common.transaction.Transactional
 import com.lecture.bank_server.domains.transactions.domain.DepositResponse
 import com.lecture.bank_server.domains.transactions.repository.TransactionsAccount
@@ -51,4 +52,16 @@ class TransactionService (
 
 
     }
+
+    fun transfer(fromUlid : String , fromAccountId: String, toAccountId: String, value: BigDecimal) = Logging.logFor(logger){ it
+
+        it["fromUlid"] = fromUlid
+        it["fromAccountId"] = fromAccountId
+        it["toUlid"] = toAccountId
+        it["Value"] = value
+
+        val key = RedisKeyProvider.bankMutexKey(fromUlid, fromAccountId)
+
+    }
+
 }
