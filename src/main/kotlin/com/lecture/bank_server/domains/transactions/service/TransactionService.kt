@@ -62,6 +62,16 @@ class TransactionService (
 
         val key = RedisKeyProvider.bankMutexKey(fromUlid, fromAccountId)
 
+        redisClient.invokeWithMutex(key){
+            return@invokeWithMutex transactional.run {
+                val fromAccount = transactionsAccount.findByUlid(fromAccountId)
+                    ?:  throw CustomException(ErrorCode.FAILED_TO_FIND_ACCOUNT)
+
+                val toAccount = transactionsAccount.findByUlid(toAccountId)
+                    ?: throw CustomException(ErrorCode.FAILED_TO_FIND_ACCOUNT)
+            }
+        }
+
     }
 
 }
