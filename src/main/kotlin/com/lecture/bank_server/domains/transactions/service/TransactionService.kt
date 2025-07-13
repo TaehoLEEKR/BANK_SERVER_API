@@ -8,6 +8,7 @@ import com.lecture.bank_server.common.logging.Logging
 import com.lecture.bank_server.common.logging.Logging.logFor
 import com.lecture.bank_server.common.transaction.Transactional
 import com.lecture.bank_server.domains.transactions.domain.DepositResponse
+import com.lecture.bank_server.domains.transactions.domain.TransferResponse
 import com.lecture.bank_server.domains.transactions.repository.TransactionsAccount
 import com.lecture.bank_server.domains.transactions.repository.TransactionsUser
 import com.lecture.bank_server.model.dto.Response
@@ -53,7 +54,7 @@ class TransactionService (
 
     }
 
-    fun transfer(fromUlid : String , fromAccountId: String, toAccountId: String, value: BigDecimal) = Logging.logFor(logger){ it
+    fun transfer(fromUlid : String , fromAccountId: String, toAccountId: String, value: BigDecimal) : Response<TransferResponse> = Logging.logFor(logger){ it
 
         it["fromUlid"] = fromUlid
         it["fromAccountId"] = fromAccountId
@@ -62,7 +63,7 @@ class TransactionService (
 
         val key = RedisKeyProvider.bankMutexKey(fromUlid, fromAccountId)
 
-        redisClient.invokeWithMutex(key){
+        return@logFor redisClient.invokeWithMutex(key){
             return@invokeWithMutex transactional.run {
                 val fromAccount = transactionsAccount.findByUlid(fromAccountId)
                     ?:  throw CustomException(ErrorCode.FAILED_TO_FIND_ACCOUNT)
@@ -85,7 +86,10 @@ class TransactionService (
                 transactionsAccount.save(toAccount)
                 transactionsAccount.save(fromAccount)
 
-
+                ResponseProvider.success(TransferResponse(
+                    afterBalance = fromAccount.balance,
+                    afterToBalance = toAccount.balance,
+                ))
             }
         }
 

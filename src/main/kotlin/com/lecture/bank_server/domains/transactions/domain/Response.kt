@@ -7,3 +7,9 @@ import java.math.BigInteger
 data class DepositResponse(
     val afterBalance: BigDecimal,
 )
+
+
+data class TransferResponse(
+    val afterBalance: BigDecimal,
+    val afterToBalance: BigDecimal,
+)
