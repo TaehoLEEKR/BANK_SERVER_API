@@ -18,6 +18,17 @@ oauth2:
       redirect-uri: ""
 
 datasource:
+  redis:
+    host: localhost
+    port: 6379
+    password: ""
+    database: 0
+    timeout: 10000
+  redisson:
+    host: redis://127.0.0.1:6379
+    timemout: 10000
+    password: ""
+
   mysql:
     url: jdbc:mysql://localhost:3306/bank
     username: root
