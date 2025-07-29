@@ -6,11 +6,13 @@ import org.redisson.config.Config
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.Primary
 import org.springframework.data.redis.connection.RedisConnectionFactory
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration
 import org.springframework.data.redis.connection.lettuce.LettuceClientConfiguration
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory
 import org.springframework.data.redis.core.RedisTemplate
+import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer
 import java.time.Duration
 
 @Configuration
@@ -37,15 +39,16 @@ class RedisConfig {
     }
 
     @Bean
+    @Primary
     fun redisTemplate(connectionFactory: RedisConnectionFactory) : RedisTemplate<String,String>{
 
         val template = RedisTemplate<String,String>()
 
         template.connectionFactory = connectionFactory
         template.keySerializer = template.stringSerializer
-        template.valueSerializer = template.stringSerializer
+        template.valueSerializer = Jackson2JsonRedisSerializer(String::class.java)
         template.hashKeySerializer = template.stringSerializer
-        template.hashValueSerializer = template.stringSerializer
+        template.hashValueSerializer =  Jackson2JsonRedisSerializer(String::class.java)
         template.afterPropertiesSet()
 
         return template
