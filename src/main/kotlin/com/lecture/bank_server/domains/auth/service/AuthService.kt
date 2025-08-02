@@ -1,18 +1,33 @@
 package com.lecture.bank_server.domains.auth.service
 
+import com.github.f4b6a3.ulid.UlidCreator
 import com.lecture.bank_server.common.exception.CustomException
 import com.lecture.bank_server.common.exception.ErrorCode
-import com.lecture.bank_server.common.jwt.jwtProvider
+import com.lecture.bank_server.common.jwt.JwtProvider
+import com.lecture.bank_server.common.logging.Logging
+import com.lecture.bank_server.common.transaction.Transactional
+import com.lecture.bank_server.domains.auth.repository.AuthUserRepository
 import com.lecture.bank_server.interfaces.OAuthServiceInterface
+import com.lecture.bank_server.model.entity.User
+import org.apache.tomcat.util.http.parser.Authorization
+import org.slf4j.Logger
 import org.springframework.stereotype.Service
 
 @Service
 class AuthService(
-    private val oAuth2Services : Map<String,OAuthServiceInterface>
-    private val jwtProvider: jwtProvider
+    private val oAuth2Services : Map<String,OAuthServiceInterface>,
+    private val jwtProvider: JwtProvider,
+    private val transaction : Transactional,
+    private val authUserRepository: AuthUserRepository
+
 ) {
-    fun handleAuth(state: String, code: String) : String{
+    private val logger: Logger = Logging.getLogger(AuthService::class.java)
+
+
+    fun handleAuth(state: String, code: String) : String = Logging.logFor(logger) { log ->
         val provider = state.lowercase()
+
+        log["provider"] = provider
 
         val callService = oAuth2Services[provider] ?: throw CustomException(ErrorCode.NOT_FOUND_PROVIDER)
 
@@ -20,7 +35,31 @@ class AuthService(
 
         val userInfo = callService.getUserInfo(accessToken.accessToken)
 
-        //userInfo
+        val token = jwtProvider.createToken(provider, userInfo.email, userInfo.name, userInfo.id)
 
+        val username = (userInfo.name ?: userInfo.email).toString()
+
+
+
+        transaction.run {
+            val exist = authUserRepository.existsByUsername(username)
+
+            if(exist){
+                // access Token 만 업데이트
+                authUserRepository.updateAccessTokenByUsername(username, accessToken.accessToken)
+            }else{
+                val ulid = UlidCreator.getUlid().toString()
+                val user = User(ulid, username, token)
+
+                authUserRepository.save(user)
+            }
+        }
+
+        return@logFor token
+
+    }
+
+    fun verifyToken(authorization: String){
+        jwtProvider.verifyToken(authorization.removePrefix("Bearer "))
     }
 }

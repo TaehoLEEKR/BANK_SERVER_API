@@ -9,15 +9,12 @@ import java.math.BigDecimal
 import java.time.LocalDateTime
 
 @Entity
-@Table(name = "users")
+@Table(name = "user")
 data class User (
 
     @Id
     @Column(name="ulid", length = 12, nullable = false)
     val ulid: String,
-
-    @Column(name = "platform", nullable = false, length = 25)
-    var platform: String,
 
     @Column(name = "username", length = 50, nullable = false, unique = true)
     val username: String,

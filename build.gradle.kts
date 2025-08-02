@@ -5,6 +5,7 @@ plugins {
     id("io.spring.dependency-management") version "1.1.7"
 
     kotlin("plugin.serialization") version "1.8.0"
+    kotlin("plugin.jpa") version "1.9.22"
 }
 
 group = "com.lecture"
@@ -40,6 +41,18 @@ dependencies {
 
     //kotlin
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
+
+    //jwt
+    implementation("com.auth0:java-jwt:3.12.0")
+
+    //ulid
+    implementation("com.github.f4b6a3:ulid-creator:5.2.3")
+
+    //redis
+    implementation("org.springframework.boot:spring-boot-starter-data-redis")
+    implementation("org.redisson:redisson-spring-boot-starter:3.36.0")
+
+
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
