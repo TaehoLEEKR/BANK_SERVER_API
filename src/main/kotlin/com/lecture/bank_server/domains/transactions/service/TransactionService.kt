@@ -4,6 +4,7 @@ import com.lecture.bank_server.common.cache.RedisClient
 import com.lecture.bank_server.common.cache.RedisKeyProvider
 import com.lecture.bank_server.common.exception.CustomException
 import com.lecture.bank_server.common.exception.ErrorCode
+import com.lecture.bank_server.common.json.JsonUtil
 import com.lecture.bank_server.common.logging.Logging
 import com.lecture.bank_server.common.logging.Logging.logFor
 import com.lecture.bank_server.common.transaction.Transactional
@@ -11,6 +12,8 @@ import com.lecture.bank_server.domains.transactions.domain.DepositResponse
 import com.lecture.bank_server.domains.transactions.domain.TransferResponse
 import com.lecture.bank_server.domains.transactions.repository.TransactionsAccount
 import com.lecture.bank_server.domains.transactions.repository.TransactionsUser
+import com.lecture.bank_server.message.TransactionMessage
+import com.lecture.bank_server.message.kafkaProducer
 import com.lecture.bank_server.model.dto.Response
 import com.lecture.bank_server.model.dto.ResponseProvider
 import org.slf4j.Logger
@@ -24,6 +27,7 @@ class TransactionService (
     private val transactionsAccount: TransactionsAccount,
     private val redisClient: RedisClient,
     private val transactional: Transactional,
+    private val producer : kafkaProducer,
     private val logger : Logger = Logging.getLogger(TransactionService::class.java)
 ){
 
@@ -46,6 +50,19 @@ class TransactionService (
                 account.balance = account.balance.add(value)
                 account.updatedAt = LocalDateTime.now()
                 transactionsAccount.save(account)
+
+                val message = JsonUtil.encodeToJson(
+                    TransactionMessage(
+                        fromUlid = "0x0",
+                        fromName = "0x0",
+                        fromAccountId = "0x0",
+                        toUlid = userUlid,
+                        toName = user.username,
+                        toAccountId = accountID,
+                        value = value,
+                    ), TransactionMessage.serializer())
+
+                producer.sendMessage("",message)
 
                 ResponseProvider.success(DepositResponse(afterBalance = account.balance) )
             }
