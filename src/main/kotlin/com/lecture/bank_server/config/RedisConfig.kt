@@ -22,9 +22,9 @@ class RedisConfig {
     fun redisConnectionFactory(
         @Value("\${database.redis.host}")   host : String,
         @Value("\${database.redis.port}")   port : Int,
-        @Value("\${database.redis.password:${null}}")   password : String?,
-        @Value("\${database.redis.database:${0}}")   database : Int,
-        @Value("\${database.redis.timeout:${10000}}")   timeout : Long,
+        @Value("\${database.redis.password:}")   password : String?,
+        @Value("\${database.redis.database:0}")   database : Int,
+        @Value("\${database.redis.timeout:10000}")   timeout : Long,
     ) : LettuceConnectionFactory {
         val config = RedisStandaloneConfiguration(host, port).apply {
             password?.let { this.setPassword(it) }
@@ -57,8 +57,8 @@ class RedisConfig {
     @Bean
     fun redissonClient(
         @Value("\${database.redis.host}")   host : String,
-        @Value("\${database.redis.timeout:${10000}}")   timeout : Int,
-        @Value("\${database.redis.password:${null}}")   password : String?,
+        @Value("\${database.redis.timeout:10000}")   timeout : Int,
+        @Value("\${database.redis.password:}")   password : String?,
     ) : RedissonClient {
         val config = Config()
 

@@ -70,11 +70,11 @@ class TransactionService (
 
 
                 if(fromAccount.user.ulid != fromUlid){
-
+                    throw CustomException(ErrorCode.MISS_MATCH_ACCOUNT_ULID_AND_USER_ULID)
                 }else if( fromAccount.balance < value ){
-
+                    throw CustomException(ErrorCode.ENOUGH_VALUE)
                 }else if(value <= BigDecimal.ZERO){
-
+                    throw CustomException(ErrorCode.FAILED_TO_FIND_ACCOUNT)
                 }
 
                 val toAccount = transactionsAccount.findByUlid(toAccountId)

@@ -10,10 +10,10 @@ import javax.sql.DataSource
 
 @Configuration
 class MySQLConfig (
-    @Value("\${datasource.mysql.url}") private val url: String,
-    @Value("\${datasource.mysql.username}") private val username: String,
-    @Value("\${datasource.mysql.password}") private val password: String,
-    @Value("\${datasource.mysql.driver-class-name}") private val driverClassName: String
+    @Value("\${database.mysql.url}") private val url: String,
+    @Value("\${database.mysql.username}") private val username: String,
+    @Value("\${database.mysql.password}") private val password: String,
+    @Value("\${database.mysql.driver-class-name}") private val driverClassName: String
 ){
     // 트랜잭션 매니저 추가적인 빈을 등록하는 경우에 대해 대비하기 위해서
     @Bean
