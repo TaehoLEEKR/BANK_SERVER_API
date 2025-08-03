@@ -8,6 +8,10 @@ import org.slf4j.Logger
 import org.springframework.kafka.core.KafkaTemplate
 import org.springframework.stereotype.Component
 
+enum class Topic(val topic: String) {
+    Transactions("transactions")
+}
+
 
 @Component
 class kafkaProducer(

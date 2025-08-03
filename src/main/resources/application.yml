@@ -25,12 +25,12 @@ database:
     database: 0
     timeout: 10000
   redisson:
-    host: redis://127.0.0.1:6379
+    host: "redis://127.0.0.1:6379"
     timeout: 10000
     password: ""
 
   mysql:
-    url: jdbc:mysql://localhost:3306/bank?allowPublicKeyRetrieval=true&useSSL=false
+    url: jdbc:mysql://localhost:3399/bank?allowPublicKeyRetrieval=true&useSSL=false
     username: root
     password: "0000"
     driver-class-name: com.mysql.cj.jdbc.Driver

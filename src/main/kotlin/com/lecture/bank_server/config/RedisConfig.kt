@@ -56,14 +56,14 @@ class RedisConfig {
 
     @Bean
     fun redissonClient(
-        @Value("\${database.redis.host}")   host : String,
-        @Value("\${database.redis.timeout:10000}")   timeout : Int,
-        @Value("\${database.redis.password:}")   password : String?,
+        @Value("\${database.redisson.host}")   host : String,  // redisson.host를 사용 (redis://127.0.0.1:6379 형식)
+        @Value("\${database.redisson.timeout:10000}")   timeout : Int,
+        @Value("\${database.redisson.password:}")   password : String?,
     ) : RedissonClient {
         val config = Config()
 
         val singleServer = config.useSingleServer()
-            .setAddress(host)
+            .setAddress(host)  // 이미 "redis://127.0.0.1:6379" 형식
             .setTimeout(timeout)
 
         if(!password.isNullOrBlank()){

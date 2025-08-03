@@ -12,6 +12,7 @@ import com.lecture.bank_server.domains.transactions.domain.DepositResponse
 import com.lecture.bank_server.domains.transactions.domain.TransferResponse
 import com.lecture.bank_server.domains.transactions.repository.TransactionsAccount
 import com.lecture.bank_server.domains.transactions.repository.TransactionsUser
+import com.lecture.bank_server.message.Topic
 import com.lecture.bank_server.message.TransactionMessage
 import com.lecture.bank_server.message.kafkaProducer
 import com.lecture.bank_server.model.dto.Response
@@ -62,7 +63,7 @@ class TransactionService (
                         value = value,
                     ), TransactionMessage.serializer())
 
-                producer.sendMessage("",message)
+                producer.sendMessage(Topic.Transactions.topic,message)
 
                 ResponseProvider.success(DepositResponse(afterBalance = account.balance) )
             }
@@ -102,6 +103,20 @@ class TransactionService (
 
                 transactionsAccount.save(toAccount)
                 transactionsAccount.save(fromAccount)
+
+                val message = JsonUtil.encodeToJson(
+                    TransactionMessage(
+                        fromUlid = fromUlid,
+                        fromName = fromAccount.user.username,
+                        fromAccountId = fromAccountId,
+                        toUlid = toAccount.user.ulid,
+                        toName = toAccount.user.username,
+                        toAccountId =toAccountId,
+                        value = value,
+                    ), TransactionMessage.serializer())
+
+                producer.sendMessage("TOPIC",message)
+                producer.sendMessage(Topic.Transactions.topic,message)
 
                 ResponseProvider.success(TransferResponse(
                     afterBalance = fromAccount.balance,
