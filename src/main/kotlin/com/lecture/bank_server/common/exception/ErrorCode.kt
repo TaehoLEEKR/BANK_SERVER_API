@@ -27,6 +27,7 @@ enum class ErrorCode (
     FAILED_TO_GET_LOCK(-114,"failed to get lock"),
     ENOUGH_VALUE(-115,"enough value"),
     FAILED_TO_SEND_MESSAGE(-116,"failed to send message"),
+    CONNECTION_ERROR(-117,"connection error")
     ;
 
 }
