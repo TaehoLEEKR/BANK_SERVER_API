@@ -1,6 +1,7 @@
 package com.lecture.bank_server.message
 
 import com.lecture.bank_server.common.json.BigDecimalSerialization
+import com.lecture.bank_server.common.json.LocalDateTimeSerialization
 import kotlinx.serialization.Serializable
 import java.math.BigDecimal
 import java.time.LocalDateTime
@@ -21,6 +22,6 @@ data class TransactionMessage(
     @Serializable(with = BigDecimalSerialization::class)
     val value : BigDecimal,
 
-    @Serializable(with = BigDecimalSerialization::class)
+    @Serializable(with = LocalDateTimeSerialization::class)
     var time : LocalDateTime = LocalDateTime.now()
 )

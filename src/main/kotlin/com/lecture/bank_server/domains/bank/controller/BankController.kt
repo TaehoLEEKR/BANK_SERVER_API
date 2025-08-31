@@ -16,13 +16,13 @@ class BankController(
     @PostMapping("/create/{ulid}")
     fun createAccount(@PathVariable("ulid", required = true) ulid: String) : Response<String> = bankService.createAccount(ulid)
 
-    @GetMapping("/balance/{ulid}/{account_ulid}")
-    fun balance(@PathVariable("ulid", required = true) ulid: String, @PathVariable("accountUlid", required = true) accountUlid: String )
+    @GetMapping("/balance/{ulid}/{accountUlid}")
+    fun accountUlidance(@PathVariable("ulid", required = true) ulid: String, @PathVariable("accountUlid", required = true) accountUlid: String )
     : Response<String>{
         return bankService.balance(ulid,accountUlid)
     }
 
-    @GetMapping("/remove/{ulid}/{account_ulid}")
+    @GetMapping("/remove/{ulid}/{accountUlid}")
     fun removeAccount(@PathVariable("ulid", required = true) ulid: String, @PathVariable("accountUlid", required = true) accountUlid: String )
     :Response<String>{
         return bankService.removeAccount(ulid,accountUlid);
